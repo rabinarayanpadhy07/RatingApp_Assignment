@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: rating-app
+    runtime: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: cd backend && node src/scripts/initDb.js && node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DB_HOST
+        fromDatabase:
+          name: rating-app-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: rating-app-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: rating-app-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: rating-app-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: rating-app-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: "*"
+
+databases:
+  - name: rating-app-db
+    databaseName: rating_app
+    user: rating_user
+    plan: free
